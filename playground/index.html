@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Viewer Playground</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        #app {
+            display: flex;
+            gap: 12px;
+            height: 100vh;
+        }
+        #jsonInput {
+            width: 50%;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+        #json-viewer-container {
+            width: 50%;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+        <textarea id="jsonInput"></textarea>
+        <div id="json-viewer-container"></div>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

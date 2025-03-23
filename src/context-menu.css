@@ -1,0 +1,68 @@
+.mac-context-menu {
+    position: fixed;
+    background-color: #e3e4e3;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    min-width: 180px;
+    padding: 4px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    user-select: none;
+    animation: none;
+}
+
+.mac-context-menu-option {
+    padding: 1px 8px;
+    font-size: 13px;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    color: #000;
+    line-height: 20px;
+    border-radius: 4px;
+}
+
+.mac-context-menu-option:hover {
+    background-color: #3d9cff;
+    color: #fff;
+}
+
+.mac-context-menu-option.disabled {
+    color: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+.mac-context-menu hr {
+    margin: 5px 0;
+    height: 1px;
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mac-context-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998; /* 比菜单低一级，确保菜单在最上层 */
+    background-color: transparent;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.mac-context-menu.closing {
+    animation: fadeOut 0.1s ease-out forwards;
+    pointer-events: none;
+}
