@@ -20,7 +20,7 @@ const defaultData = {
 const view = JSONView.createView(defaultData);
 document.getElementById('json-viewer-container').appendChild(view.render());
 
-const input = document.getElementById('jsonInput');
+const input = document.getElementById('json-input');
 input.value = JSON.stringify(defaultData, null, 2);
 
 // 添加处理Tab键的事件监听器
