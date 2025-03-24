@@ -1,13 +1,41 @@
 {
-    "name": "json-viewer",
-    "private": true,
-    "version": "0.0.0",
+    "name": "@bqh/json-viewer",
+    "private": false,
+    "version": "0.0.1",
     "type": "module",
+    "description": "A Chrome-Devtools-Like JSON viewer",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/banqinghe/json-viewer.git"
+    },
     "scripts": {
         "dev": "vite --mode playground",
         "build": "tsc && vite build",
-        "build:playground": "vite build --mode playground"
+        "build:playground": "vite build --mode playground",
+        "prepublishOnly": "npm run build"
     },
+    "keywords": [
+        "json",
+        "json-viewer"
+    ],
+    "author": "banqinghe",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/banqinghe/json-viewer/issues"
+    },
+    "homepage": "https://github.com/banqinghe/json-viewer#readme",
     "devDependencies": {
         "@stylistic/eslint-plugin": "^2.12.1",
         "@typescript-eslint/parser": "^8.18.2",
@@ -15,5 +43,9 @@
         "typescript": "~5.7.2",
         "vite": "^6.2.0",
         "vite-plugin-dts": "^4.5.3"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
     }
 }
