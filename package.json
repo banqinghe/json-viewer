@@ -1,15 +1,15 @@
 {
     "name": "@bqh/json-viewer",
     "private": false,
-    "version": "0.0.1",
+    "version": "0.0.2",
     "type": "module",
     "description": "A Chrome-Devtools-Like JSON viewer",
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
+    "main": "./dist/json-viewer.js",
+    "module": "./dist/json-viewer.js",
     "types": "./dist/index.d.ts",
     "exports": {
         ".": {
-            "import": "./dist/index.js",
+            "import": "./dist/json-viewer.js",
             "types": "./dist/index.d.ts"
         }
     },
