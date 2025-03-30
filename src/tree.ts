@@ -3,8 +3,61 @@ import { renderContextMenu } from './context-menu';
 import { copyText, storeAsGlobalVariable } from './util';
 import type { ContextMenuOption } from './context-menu';
 
-export class TreeOutline {
-    element: HTMLElement;
+abstract class TreeNode {
+    abstract element: HTMLElement;
+    abstract childrenElement?: HTMLOListElement;
+    children: TreeElement[] = [];
+    expanded: boolean;
+
+    constructor(expanded = true) {
+        this.expanded = expanded;
+    }
+
+    expand() {
+        this.expanded = true;
+        this.element.classList.add('expanded');
+        if (this.childrenElement) {
+            this.childrenElement.style.display = 'block';
+        }
+    }
+
+    expandRecursively() {
+        this.expand();
+        for (const child of this.children) {
+            child.expandRecursively();
+        }
+    }
+
+    collapse() {
+        this.expanded = false;
+        this.element.classList.remove('expanded');
+        if (this.childrenElement) {
+            this.childrenElement.style.display = 'none';
+        }
+    }
+
+    collapseChildren() {
+        if (!this.expanded) {
+            return;
+        }
+        for (const child of this.children) {
+            child.collapse();
+        }
+    }
+
+    appendChild(child: TreeElement) {
+        this.children.push(child);
+        this.childrenElement!.appendChild(child.element);
+        child.parent = this as unknown as TreeOutline | TreeElement;
+        child.init();
+        return child;
+    }
+
+    abstract onContextMenu(e: MouseEvent): void;
+}
+
+export class TreeOutline extends TreeNode {
+    element: HTMLOListElement;
     children: TreeElement[] = [];
     childrenElement: HTMLOListElement;
     titleElement: HTMLLIElement;
@@ -12,6 +65,7 @@ export class TreeOutline {
     object: JSONNode;
 
     constructor(object: JSONNode, title?: string, expanded = true) {
+        super(expanded);
         this.object = object;
         this.expanded = expanded;
 
@@ -40,13 +94,6 @@ export class TreeOutline {
         }
 
         this.element.addEventListener('contextmenu', this.onContextMenu.bind(this));
-    }
-
-    appendChild(child: TreeElement) {
-        this.children.push(child);
-        this.childrenElement.appendChild(child.element);
-        child.parent = this;
-        return child;
     }
 
     onTitleClick() {
@@ -82,58 +129,31 @@ export class TreeOutline {
         });
     }
 
-    expand() {
-        this.expanded = true;
-        this.element.classList.add('expanded');
-        this.childrenElement.style.display = 'block';
-    }
-
-    expandRecursively() {
-        this.expand();
-        for (const child of this.children) {
-            child.expandRecursively();
-        }
-    }
-
-    collapse() {
-        this.expanded = false;
-        this.element.classList.remove('expanded');
-        this.childrenElement.style.display = 'none';
-    }
-
-    collapseChildren() {
-        if (!this.expanded) {
-            return;
-        }
-        for (const child of this.children) {
-            child.collapse();
-        }
-    }
-
     dispose() {
         this.element.remove();
     }
 }
 
-export class TreeElement {
+export class TreeElement extends TreeNode {
     element: HTMLLIElement;
-    parent: TreeOutline | TreeElement | null = null;
+    childrenElement?: HTMLOListElement | undefined;
+    parent!: TreeOutline | TreeElement;
     children: TreeElement[] = [];
-    childrenElement: HTMLOListElement | null = null;
     valueElement: HTMLElement;
     nameElement: HTMLElement;
     expanded: boolean;
     property: PropertyDescriptor;
 
     constructor(property: PropertyDescriptor) {
+        super();
+        this.property = property;
+
         this.element = document.createElement('li');
         this.element.className = 'tree-element';
         const selectionElement = document.createElement('div');
         selectionElement.className = 'selection';
         this.element.appendChild(selectionElement);
         this.expanded = true;
-
-        this.property = property;
 
         this.element.classList.add('object-property');
 
@@ -142,7 +162,7 @@ export class TreeElement {
 
         this.nameElement = document.createElement('span');
         this.nameElement.className = 'property-name';
-        this.nameElement.innerText = property.name;
+        this.nameElement.innerText = this.property.name;
 
         const separator = document.createElement('span');
         separator.className = 'separator';
@@ -150,14 +170,16 @@ export class TreeElement {
 
         this.valueElement = document.createElement('span');
         this.valueElement.className = 'property-value';
-        this.initValueElement();
-
-        this.initElementTitle();
 
         inlineElement.appendChild(this.nameElement);
         inlineElement.appendChild(separator);
         inlineElement.appendChild(this.valueElement);
         this.element.appendChild(inlineElement);
+    }
+
+    init() {
+        this.initValueElement();
+        this.initElementTitle();
 
         if (this.property.value.hasChildren()) {
             this.initChildren();
@@ -294,44 +316,5 @@ export class TreeElement {
             onOpen: () => this.element.classList.add('context-menu-focused'),
             onClose: () => this.element.classList.remove('context-menu-focused'),
         });
-    }
-
-    expand() {
-        this.expanded = true;
-        this.element.classList.add('expanded');
-        if (this.childrenElement) {
-            this.childrenElement.style.display = 'block';
-        }
-    }
-
-    expandRecursively() {
-        this.expand();
-        for (const child of this.children) {
-            child.expandRecursively();
-        }
-    }
-
-    collapse() {
-        this.expanded = false;
-        this.element.classList.remove('expanded');
-        if (this.childrenElement) {
-            this.childrenElement.style.display = 'none';
-        }
-    }
-
-    collapseChildren() {
-        if (!this.expanded) {
-            return;
-        }
-        for (const child of this.children) {
-            child.collapse();
-        }
-    }
-
-    appendChild(child: TreeElement) {
-        this.children.push(child);
-        this.childrenElement!.appendChild(child.element);
-        child.parent = this;
-        return child;
     }
 }
