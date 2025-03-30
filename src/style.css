@@ -2,11 +2,35 @@
 
 :root {
     --json-viewer-color: #303030;
+    --json-viewer-bg-color: #ffffff;
     --json-viewer-font-size: 13px;
     --json-viewer-font-family: ui-monospace, monospace;
-    --json-viewer-indent: 12px;
+    --json-viewer-indent: 14px;
     --json-viewer-error-bg: rgba(255, 0, 0, 0.05);
     --json-viewer-error-color: #d32f2f;
+    --json-viewer-selection-bg: #f2f2f2;
+    --json-viewer-property-name-color: #881280;
+    --json-viewer-string-color: #C41A16;
+    --json-viewer-number-color: #1C00CF;
+    --json-viewer-boolean-color: #0D22AA;
+    --json-viewer-null-color: #808080;
+    --json-viewer-error-content-bg: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --json-viewer-color: #e8eaed;
+        --json-viewer-bg-color: #202124;
+        --json-viewer-error-bg: rgba(255, 0, 0, 0.15);
+        --json-viewer-error-color: #ff5252;
+        --json-viewer-selection-bg: #454545;
+        --json-viewer-property-name-color: #c792ea;
+        --json-viewer-string-color: #f28b54;
+        --json-viewer-number-color: #6caeff;
+        --json-viewer-boolean-color: #5db0d7;
+        --json-viewer-null-color: #999999;
+        --json-viewer-error-content-bg: #2c2c2c;
+    }
 }
 
 .json-view {
@@ -14,6 +38,7 @@
     font-family: var(--json-viewer-font-family);
     font-size: var(--json-viewer-font-size);
     color: var(--json-viewer-color);
+    background-color: var(--json-viewer-bg-color);
     overflow: auto;
     cursor: default;
     user-select: none;
@@ -39,7 +64,7 @@
     padding: 16px;
     text-align: center;
     max-width: 80%;
-    background-color: white;
+    background-color: var(--json-viewer-error-content-bg);
     border: 1px solid var(--json-viewer-error-color);
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -62,6 +87,7 @@
 .tree-element {
     position: relative;
     min-width: fit-content;
+    isolation: isolate;
 }
 .tree-element.parent {
     list-style-type: disclosure-closed;
@@ -78,7 +104,7 @@
     inset: 0;
     margin-left: -10000px;
     z-index: -1;
-    background: #f2f2f2;
+    background: var(--json-viewer-selection-bg);
 }
 :is(.tree-element:hover, .tree-element.context-menu-focused) .selection {
     display: block;
@@ -101,10 +127,14 @@
 .name-and-value {
     display: flex;
     min-width: fit-content;
+
+    > * {
+        line-height: 18.5px;
+    }
 }
 
 .property-name {
-    color: #881280;
+    color: var(--json-viewer-property-name-color);
     font-weight: bold;
 }
 
@@ -117,14 +147,14 @@
 }
 
 .property-value[data-type=string] {
-    color: #C41A16;
+    color: var(--json-viewer-string-color);
 }
 .property-value[data-type=number] {
-    color: #1C00CF;
+    color: var(--json-viewer-number-color);
 }
 .property-value[data-type=boolean] {
-    color: #0D22AA;
+    color: var(--json-viewer-boolean-color);
 }
 .property-value[data-type=null] {
-    color: #808080;
+    color: var(--json-viewer-null-color);
 }
